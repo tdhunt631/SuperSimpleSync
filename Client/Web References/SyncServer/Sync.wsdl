@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="GetFileFromServer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="accountId" type="s1:guid" />
+            <s:element minOccurs="0" maxOccurs="1" name="path" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFileFromServerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFileFromServerResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendFileToServer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="accountId" type="s1:guid" />
+            <s:element minOccurs="0" maxOccurs="1" name="path" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="buffer" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendFileToServerResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetServerSyncDir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="accountId" type="s1:guid" />
+            <s:element minOccurs="0" maxOccurs="1" name="rootDir" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetServerSyncDirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetServerSyncDirResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
+      <s:simpleType name="guid">
+        <s:restriction base="s:string">
+          <s:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetFileFromServerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFileFromServer" />
+  </wsdl:message>
+  <wsdl:message name="GetFileFromServerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFileFromServerResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendFileToServerSoapIn">
+    <wsdl:part name="parameters" element="tns:SendFileToServer" />
+  </wsdl:message>
+  <wsdl:message name="SendFileToServerSoapOut">
+    <wsdl:part name="parameters" element="tns:SendFileToServerResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetServerSyncDirSoapIn">
+    <wsdl:part name="parameters" element="tns:GetServerSyncDir" />
+  </wsdl:message>
+  <wsdl:message name="GetServerSyncDirSoapOut">
+    <wsdl:part name="parameters" element="tns:GetServerSyncDirResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SyncSoap">
+    <wsdl:operation name="GetFileFromServer">
+      <wsdl:input message="tns:GetFileFromServerSoapIn" />
+      <wsdl:output message="tns:GetFileFromServerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendFileToServer">
+      <wsdl:input message="tns:SendFileToServerSoapIn" />
+      <wsdl:output message="tns:SendFileToServerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServerSyncDir">
+      <wsdl:input message="tns:GetServerSyncDirSoapIn" />
+      <wsdl:output message="tns:GetServerSyncDirSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SyncSoap" type="tns:SyncSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetFileFromServer">
+      <soap:operation soapAction="http://tempuri.org/GetFileFromServer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendFileToServer">
+      <soap:operation soapAction="http://tempuri.org/SendFileToServer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServerSyncDir">
+      <soap:operation soapAction="http://tempuri.org/GetServerSyncDir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SyncSoap12" type="tns:SyncSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetFileFromServer">
+      <soap12:operation soapAction="http://tempuri.org/GetFileFromServer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendFileToServer">
+      <soap12:operation soapAction="http://tempuri.org/SendFileToServer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServerSyncDir">
+      <soap12:operation soapAction="http://tempuri.org/GetServerSyncDir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Sync">
+    <wsdl:port name="SyncSoap" binding="tns:SyncSoap">
+      <soap:address location="http://localhost:54661/Sync.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SyncSoap12" binding="tns:SyncSoap12">
+      <soap12:address location="http://localhost:54661/Sync.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
