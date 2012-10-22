@@ -11,7 +11,7 @@ namespace SuperSimpleSync
 {
     class Program
     {
-        private DirectoryInfo LocalStorage = new System.IO.DirectoryInfo(@"G:\Temp\Test\Sync B\Dir A");
+        private DirectoryInfo LocalStorage = new System.IO.DirectoryInfo(@"C:\temp\TestSyncDir");
         private Guid accountId = Guid.Parse("{FC948776-0FA5-4ABC-A2F3-E8AC8005DFCA}");
         SyncServer.Sync _sync = new SyncServer.Sync();
 
@@ -20,11 +20,7 @@ namespace SuperSimpleSync
             Program p = new Program();
             try
             {
-                while (true)
-                {
-                    Thread.Sleep(2000);
-                    p.SyncWithServer();
-                }
+                p.SyncWithServer();
             }
             catch (Exception ex)
             {

@@ -18,7 +18,7 @@ namespace Server
     // [System.Web.Script.Services.ScriptService]
     public class Sync : System.Web.Services.WebService
     {
-        private DirectoryInfo StorageDir = new DirectoryInfo(@"G:\Temp\Test\Sync A");
+        private DirectoryInfo StorageDir = new DirectoryInfo(@"C:\temp\TestServerStorage");
 
         public DirectoryInfo GetAccountStorageDir(Guid accountId)
         {
