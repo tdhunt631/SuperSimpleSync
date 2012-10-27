@@ -104,7 +104,7 @@ namespace Common
             {
                 dirs.Add(d.Copy());
             }
-            Directories = dirs.ToArray();
+            dir.Directories = dirs.ToArray();
             return dir;
         }
 

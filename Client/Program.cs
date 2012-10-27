@@ -32,6 +32,7 @@ namespace SuperSimpleSync
 
         private void SyncWithServer()
         {
+            _sync.Timeout = 600000;
             SyncDir local = Util.AuditTree(LocalStorage);
             SyncDir server = Util.FromXml<SyncDir>(_sync.GetServerSyncDir(accountId, local.Name));
             Util.RebuildParentRelationships(server);
