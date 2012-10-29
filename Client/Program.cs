@@ -24,32 +24,27 @@ namespace SuperSimpleSync
         SyncServer.Sync _sync = new SyncServer.Sync();
 
         static void Main() 
-        {            
+        {
             Program p = new Program();
             p.InitializeComponent();
-            Application.Run(p);
-        }
 
-        public Program()
-        {
-            try
-            {
-                SyncWithServer();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("There was an error syncing: " + ex.Message);
-                Environment.Exit(1);
-            }
+            Thread syncThread = new Thread(new ThreadStart(p.SyncWithServer));
+            syncThread.Start();
+
+            Application.Run(p);
         }
                 
         private void SyncWithServer()
         {
-            SyncDir local = Util.AuditTree(LocalStorage);
-            SyncDir server = Util.FromXml<SyncDir>(_sync.GetServerSyncDir(accountId, local.Name));
-            Util.RebuildParentRelationships(server);
-            ResolveDifferencesWithLocal(server.GetNewerFiles(local), LocalStorage);
-            ResolveDifferencesWithServer(local.GetNewerFiles(server), LocalStorage);
+            while (true)
+            {
+                SyncDir local = Util.AuditTree(LocalStorage);
+                SyncDir server = Util.FromXml<SyncDir>(_sync.GetServerSyncDir(accountId, local.Name));
+                Util.RebuildParentRelationships(server);
+                ResolveDifferencesWithLocal(server.GetNewerFiles(local), LocalStorage);
+                ResolveDifferencesWithServer(local.GetNewerFiles(server), LocalStorage);
+                Thread.Sleep(5000);
+            }
         }
 
         private void ResolveDifferencesWithServer(SyncDir diff, DirectoryInfo dir)
@@ -183,7 +178,6 @@ namespace SuperSimpleSync
         {
             this.Show();
             this.WindowState = this.lastState;
-            this.tray.Visible = false;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
