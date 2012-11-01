@@ -29,6 +29,8 @@ namespace SuperSimpleSync
             p.InitializeComponent();
 
             Thread syncThread = new Thread(new ThreadStart(p.SyncWithServer));
+            syncThread.Name = "syncThread";
+            syncThread.IsBackground = true;
             syncThread.Start();
 
             Application.Run(p);
