@@ -1,5 +1,0 @@
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Common\bin\Debug\BinUtil.dll
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Common\bin\Debug\BinUtil.pdb
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Common\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Common\obj\Debug\BinUtil.dll
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Common\obj\Debug\BinUtil.pdb
