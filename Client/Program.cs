@@ -16,40 +16,62 @@ namespace SuperSimpleSync
         private static Guid accountId = Guid.Parse("{FC948776-0FA5-4ABC-A2F3-E8AC8005DFCA}"); 
         private System.Windows.Forms.ContextMenuStrip trayMenu;
         private System.Windows.Forms.NotifyIcon tray;
-        private Label label1;
         private System.ComponentModel.IContainer components;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         FormWindowState lastState = new FormWindowState();
+        FileSystemWatcher watcher = new FileSystemWatcher();
+        private ToolStripMenuItem syncNowToolStripMenuItem;
         SyncServer.Sync _sync = new SyncServer.Sync();
 
         static void Main() 
         {
             Program p = new Program();
             p.InitializeComponent();
-
-            Thread syncThread = new Thread(new ThreadStart(p.SyncWithServer));
-            syncThread.Name = "syncThread";
-            syncThread.IsBackground = true;
-            syncThread.Start();
-
+            p.SyncWithServer();
             Application.Run(p);
-        }
+        }        
                 
         private void SyncWithServer()
         {
             _sync.Timeout = 600000;
+            //sync once on start up
+            SyncNow();
 
-            while (true)
-            {
+            //monitor local files and sync with server on changes
+            watcher.Path = @"C:\temp\TestSyncDir";
+            watcher.IncludeSubdirectories = true;
+            watcher.NotifyFilter = NotifyFilters.LastWrite
+                | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            watcher.Filter = "*.*";
+            watcher.EnableRaisingEvents = true;
 
-                SyncDir local = Util.AuditTree(LocalStorage);
-                SyncDir server = Util.FromXml<SyncDir>(_sync.GetServerSyncDir(accountId, local.Name));
-                Util.RebuildParentRelationships(server);
-                ResolveDifferencesWithLocal(server.GetNewerFiles(local), LocalStorage);
-                ResolveDifferencesWithServer(local.GetNewerFiles(server), LocalStorage);
-                Thread.Sleep(5000);
-            }
+            // Add event handlers
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            watcher.Created += new FileSystemEventHandler(OnChanged);
+            watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            watcher.Renamed += new RenamedEventHandler(OnRenamed);
+        }
+
+        private void SyncNow()
+        {
+            SyncDir local = Util.AuditTree(LocalStorage);
+            SyncDir server = Util.FromXml<SyncDir>(_sync.GetServerSyncDir(accountId, local.Name));
+            Util.RebuildParentRelationships(server);
+            ResolveDifferencesWithLocal(server.GetNewerFiles(local), LocalStorage);
+            ResolveDifferencesWithServer(local.GetNewerFiles(server), LocalStorage);
+        }
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            SyncNow();
+            Thread.Sleep(10000);
+        }
+
+        private void OnRenamed(object sender, FileSystemEventArgs e)
+        {
+            SyncNow();
+            Thread.Sleep(10000);
         }
 
         private void ResolveDifferencesWithServer(SyncDir diff, DirectoryInfo dir)
@@ -100,69 +122,67 @@ namespace SuperSimpleSync
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Program));
-            this.label1 = new System.Windows.Forms.Label();
             this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.syncNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tray = new System.Windows.Forms.NotifyIcon(this.components);
             this.trayMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(145, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Interface needs development";
-            // 
             // trayMenu
             // 
             this.trayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.syncNowToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.trayMenu.Name = "trayMenu";
-            this.trayMenu.Size = new System.Drawing.Size(153, 70);
+            this.trayMenu.Size = new System.Drawing.Size(128, 70);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // syncNowToolStripMenuItem
+            // 
+            this.syncNowToolStripMenuItem.Name = "syncNowToolStripMenuItem";
+            this.syncNowToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.syncNowToolStripMenuItem.Text = "Sync Now";
+            this.syncNowToolStripMenuItem.Click += new System.EventHandler(this.syncNowToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // tray
             // 
-            this.tray.BalloonTipText = "SuperSimpleSync is still running!";
+            this.tray.BalloonTipText = "SuperSimpleSync";
             this.tray.ContextMenuStrip = this.trayMenu;
             this.tray.Icon = ((System.Drawing.Icon)(resources.GetObject("tray.Icon")));
             this.tray.Text = "SuperSimpleSync";
+            this.tray.Visible = true;
             this.tray.DoubleClick += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // Program
             // 
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(300, 300);
             this.Name = "Program";
-            this.ShowInTaskbar = false;
+            this.ShowIcon = false;
             this.Text = "SuperSimpleSync";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Program_FormClosed);
             this.Resize += new System.EventHandler(this.Program_Resize);
             this.trayMenu.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -175,7 +195,6 @@ namespace SuperSimpleSync
         {
             if (FormWindowState.Minimized == this.WindowState)
             {
-                this.tray.Visible = true;
                 this.tray.ShowBalloonTip(250);
                 this.Hide();
             }
@@ -191,6 +210,11 @@ namespace SuperSimpleSync
         {
             Application.Exit();
             Environment.Exit(1);
+        }
+
+        private void syncNowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SyncNow();
         }
     }
 }
