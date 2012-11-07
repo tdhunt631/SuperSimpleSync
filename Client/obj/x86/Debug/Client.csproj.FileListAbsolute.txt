@@ -1,1 +1,10 @@
-U:\Desktop\SuperSimpleSync\Client\bin\Debug\SuperSimpleSync.exe.config
+C:\Users\Ninja\Desktop\GroupSync\Client\bin\Debug\SuperSimpleSync.exe.config
+C:\Users\Ninja\Desktop\GroupSync\Client\bin\Debug\SuperSimpleSync.exe
+C:\Users\Ninja\Desktop\GroupSync\Client\bin\Debug\SuperSimpleSync.pdb
+C:\Users\Ninja\Desktop\GroupSync\Client\bin\Debug\BinUtil.dll
+C:\Users\Ninja\Desktop\GroupSync\Client\bin\Debug\BinUtil.pdb
+C:\Users\Ninja\Desktop\GroupSync\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\Ninja\Desktop\GroupSync\Client\obj\x86\Debug\SuperSimpleSync.Program.resources
+C:\Users\Ninja\Desktop\GroupSync\Client\obj\x86\Debug\Client.csproj.GenerateResource.Cache
+C:\Users\Ninja\Desktop\GroupSync\Client\obj\x86\Debug\SuperSimpleSync.exe
+C:\Users\Ninja\Desktop\GroupSync\Client\obj\x86\Debug\SuperSimpleSync.pdb
