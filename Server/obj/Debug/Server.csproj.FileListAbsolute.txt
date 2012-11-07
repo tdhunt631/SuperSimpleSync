@@ -1,7 +1,0 @@
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Server\bin\Server.dll
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Server\bin\Server.pdb
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Server\bin\BinUtil.dll
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Server\bin\BinUtil.pdb
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Server\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Server\obj\Debug\Server.dll
-C:\Users\Hunts\Documents\GitHub\SuperSimpleSync\Server\obj\Debug\Server.pdb
