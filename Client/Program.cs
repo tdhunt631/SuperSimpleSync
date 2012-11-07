@@ -22,8 +22,10 @@ namespace SuperSimpleSync
         FormWindowState lastState = new FormWindowState();
         FileSystemWatcher watcher = new FileSystemWatcher();
         private ToolStripMenuItem syncNowToolStripMenuItem;
+        private ToolStripMenuItem deleteToolStripMenuItem;
         SyncServer.Sync _sync = new SyncServer.Sync();
 
+        [STAThreadAttribute]
         static void Main() 
         {
             Program p = new Program();
@@ -60,6 +62,30 @@ namespace SuperSimpleSync
             Util.RebuildParentRelationships(server);
             ResolveDifferencesWithLocal(server.GetNewerFiles(local), LocalStorage);
             ResolveDifferencesWithServer(local.GetNewerFiles(server), LocalStorage);
+        }
+
+        private void DeleteFile(string path)
+        {
+            //Delete from local
+            System.IO.FileInfo filehandle = new FileInfo(path);
+            if (filehandle.Exists)
+            {
+                filehandle.Delete();
+            }
+
+            //Format string and delete from server
+            string[] parts = path.Split(Path.DirectorySeparatorChar);
+            Boolean started = false;
+            string[] localparts = LocalStorage.ToString().Split(Path.DirectorySeparatorChar);
+            path = "" + Path.DirectorySeparatorChar + localparts[localparts.Length-1];
+            foreach (string part in parts)
+            {
+                if (!LocalStorage.ToString().Contains(part))
+                {
+                    path = path + Path.DirectorySeparatorChar + part;
+                }
+            }
+            _sync.DeleteFileFromServer(accountId, path);
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)
@@ -124,6 +150,7 @@ namespace SuperSimpleSync
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Program));
             this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.syncNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tray = new System.Windows.Forms.NotifyIcon(this.components);
@@ -134,29 +161,37 @@ namespace SuperSimpleSync
             // 
             this.trayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.deleteToolStripMenuItem,
             this.syncNowToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.trayMenu.Name = "trayMenu";
-            this.trayMenu.Size = new System.Drawing.Size(128, 70);
+            this.trayMenu.Size = new System.Drawing.Size(153, 114);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // syncNowToolStripMenuItem
             // 
             this.syncNowToolStripMenuItem.Name = "syncNowToolStripMenuItem";
-            this.syncNowToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.syncNowToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.syncNowToolStripMenuItem.Text = "Sync Now";
             this.syncNowToolStripMenuItem.Click += new System.EventHandler(this.syncNowToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -216,5 +251,24 @@ namespace SuperSimpleSync
         {
             SyncNow();
         }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            String input = string.Empty;
+
+            OpenFileDialog dialog = new OpenFileDialog();
+
+            dialog.InitialDirectory = LocalStorage.ToString();
+            dialog.Title = "Select a file to delete";
+
+            string strFileName = "";
+            if (dialog.ShowDialog() == DialogResult.OK)
+                strFileName =  dialog.FileName;
+            if (strFileName == String.Empty)
+                return; //user didn't select a file to open
+
+            DeleteFile(strFileName);
+          }
     }
 }
