@@ -122,6 +122,15 @@ namespace SuperSimpleSync.SyncServer {
                         path,
                         buffer});
         }
+
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/DeleteFileFromServer", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void DeleteFileFromServer(System.Guid accountId, string path)
+        {
+            this.Invoke("DeleteFileFromServer", new object[] {
+                        accountId,
+                        path});
+        }
         
         /// <remarks/>
         public void SendFileToServerAsync(System.Guid accountId, string path, byte[] buffer) {
@@ -194,6 +203,7 @@ namespace SuperSimpleSync.SyncServer {
             }
             return false;
         }
+
     }
     
     /// <remarks/>

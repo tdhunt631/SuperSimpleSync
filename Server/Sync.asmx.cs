@@ -44,6 +44,14 @@ namespace Server
             File.WriteAllBytes(ServerStorage.FullName + path, buffer);
         }
 
+        [WebMethod]
+        public void DeleteFileFromServer(Guid accountId, string path)
+        {
+            DirectoryInfo ServerStorage = GetAccountStorageDir(accountId);
+            path = ServerStorage + path;
+            File.Delete(path);
+        }
+
         private void EnsureDirectoryStructure(Guid accountId, string path, DirectoryInfo baseDir)
         {
             path = path.Replace(Path.GetFileName(path), string.Empty);

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{5F1D42A6-350D-42AA-A0D2-B1CE8F17EC79}"
 	ProjectSection(ProjectDependencies) = postProject
 		{67E93493-84FD-4BAB-9392-D875590E84F4} = {67E93493-84FD-4BAB-9392-D875590E84F4}
